@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.model2.mvc.common.Page;
@@ -24,6 +25,7 @@ import com.model2.mvc.service.product.ProductService;
 
 //==> 상품 등록 관리 Controller
 @Controller
+@RequestMapping("/product/*")
 public class ProductController {
 	
 	///Field
@@ -49,10 +51,12 @@ public class ProductController {
 	
 	
 	
-	@RequestMapping("/addProduct.do")
+	//@RequestMapping("/addProduct.do")
+	
+	@RequestMapping( value="addProduct", method=RequestMethod.GET )
 	public String addProduct( @ModelAttribute("product") Product product,Model model ) throws Exception {
 
-		System.out.println("/addProduct.do");
+		System.out.println("/product/addProduct : GET");
 		//ProductService productService;
 		//Business Logic
 		productService.addProduct(product);
@@ -62,10 +66,11 @@ public class ProductController {
 	//addProduct.do 구현완료
 	
 	
-	@RequestMapping("/getProduct.do")
+	//@RequestMapping("/getProduct.do")
+	@RequestMapping( value="getProduct", method=RequestMethod.GET )
 	public String getProduct( @RequestParam("prodNo") int prodNo , Model model ) throws Exception {
 		
-		System.out.println("/getProduct.do");
+		System.out.println("/product/getProduct: GET");
 		//Business Logic
 		Product product = productService.getProduct(prodNo);
 		// Model 과 View 연결
@@ -76,10 +81,11 @@ public class ProductController {
 	//getProduct는 안되면 product를 vo로 체인지하기
 	
 	
-	@RequestMapping("/updateProductView.do")
+	//@RequestMapping("/updateProductView.do")
+	@RequestMapping( value="updateProductView", method=RequestMethod.GET )
 	public String updateProductView( @RequestParam("prodNo") int prodNo , Model model ) throws Exception{
 
-		System.out.println("/updateProductView.do");
+		System.out.println("/product/updateProductView: GET");
 		//Business Logic
 		Product product = productService.getProduct(prodNo);
 		// Model 과 View 연결
@@ -89,10 +95,11 @@ public class ProductController {
 	}
 	
 	
-	@RequestMapping("/updateProduct.do")
+	//@RequestMapping("/updateProduct.do")
+	@RequestMapping( value="updateProduct", method=RequestMethod.POST )
 	public String updateProduct( @ModelAttribute("product") Product product , Model model , HttpSession session) throws Exception{
 
-		System.out.println("/updateProduct.do");
+		System.out.println("/product/updateProduct: POST");
 		//Business Logic
 		productService.updateProduct(product);
 		
@@ -100,13 +107,16 @@ public class ProductController {
 		if(sessionProdNo == product.getProdNo()){
 			session.setAttribute("product", product);
 		}
-		return "redirect:/getProduct.do?prodNo="+ product.getProdNo();
+		System.out.println(product.getProdNo());
+		return "forward:/product/getProduct?prodNo="+product.getProdNo();
+		
 	}//prodNo대신에 getProdNo해서 얻음
 	
-	@RequestMapping("/listProduct.do")
+	//@RequestMapping("/listProduct.do")
+	@RequestMapping( value="listProduct" )
 	public String listProduct( @ModelAttribute("search") Search search , Model model , HttpServletRequest request) throws Exception{
 		
-		System.out.println("/listProduct.do");
+		System.out.println("/product/listProduct : GET / POST");
 		
 		if(search.getCurrentPage() ==0 ){
 			search.setCurrentPage(1);
