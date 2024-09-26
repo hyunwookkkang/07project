@@ -97,19 +97,15 @@ public class ProductController {
 	
 	//@RequestMapping("/updateProduct.do")
 	@RequestMapping( value="updateProduct", method=RequestMethod.POST )
-	public String updateProduct( @ModelAttribute("product") Product product , Model model , HttpSession session) throws Exception{
+	public String updateProduct( @ModelAttribute("product") Product product ,Model model , HttpSession session) throws Exception{
 
 		System.out.println("/product/updateProduct: POST");
 		//Business Logic
 		productService.updateProduct(product);
-		
-		int sessionProdNo=((Product)session.getAttribute("product")).getProdNo();
-		if(sessionProdNo == product.getProdNo()){
-			session.setAttribute("product", product);
-		}
-		System.out.println(product.getProdNo());
-		return "forward:/product/getProduct?prodNo="+product.getProdNo();
-		
+		System.out.println("Request prodNo: " + product.getProdNo());
+		//return "redirect:/product/getProduct?prodNo="+product.getProdNo();
+		return "redirect:/product/getProduct?prodNo="+product.getProdNo()+"&menu=search";
+		//return "redirect:/product/getProduct?prodNo="+product.getProdNo()+"&menu=search";
 	}//prodNo대신에 getProdNo해서 얻음
 	
 	//@RequestMapping("/listProduct.do")
